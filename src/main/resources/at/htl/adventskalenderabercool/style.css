@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Last Christmas PERSONAL USE';
+    src: url('./fonts/LastChristmas_PERSONAL_USE_ONLY.otf') format('opentype');
+}
+
+#Heading {
+    -fx-font-family: 'Last Christmas PERSONAL USE';
+    -fx-font-size: 50;
+    -fx-effect: dropshadow(gaussian, #e33636, 1, 1, 1, 1);
+}
+
+.door {
+    -fx-background-color: #f0f0f0;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+    -fx-font-size: 20;
+}
