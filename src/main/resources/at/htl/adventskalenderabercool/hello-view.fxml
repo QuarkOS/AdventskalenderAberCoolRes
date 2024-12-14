@@ -15,6 +15,9 @@
             <Button fx:id="Door24" layoutX="300.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" />
             <Button fx:id="Door23" layoutX="374.0" layoutY="361.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" />
             <Button fx:id="Door10" layoutX="455.0" layoutY="180.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" />
+            <ImageView fx:id="image24" fitHeight="100.0" fitWidth="100.0" layoutX="300" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="image23" fitHeight="100.0" fitWidth="100.0" layoutX="374" layoutY="361" mouseTransparent="true" pickOnBounds="true" preserveRatio="false" />
+            <ImageView fx:id="image10" fitHeight="100.0" fitWidth="100.0" layoutX="455" layoutY="180" mouseTransparent="true" pickOnBounds="true" preserveRatio="true" />
          </children>
       </Group>
       <Label fx:id="Heading" alignment="CENTER" prefHeight="181.0" prefWidth="1920.0" text="Crash Advent Calender" textAlignment="CENTER" textFill="WHITE">

@@ -1,19 +1,17 @@
 package at.htl.adventskalenderabercool;
 
-import javafx.animation.*;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
-import javafx.geometry.Insets;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Pane;
 import javafx.util.Duration;
 
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.ArrayList;
 
 public class HelloController {
 
@@ -72,22 +70,62 @@ public class HelloController {
     @FXML
     private Pane backgroundPane;
 
+    @FXML
+    private ImageView image1;
+    @FXML
+    private ImageView image2;
+    @FXML
+    private ImageView image3;
+    @FXML
+    private ImageView image4;
+    @FXML
+    private ImageView image5;
+    @FXML
+    private ImageView image6;
+    @FXML
+    private ImageView image7;
+    @FXML
+    private ImageView image8;
+    @FXML
+    private ImageView image9;
+    @FXML
+    private ImageView image10;
+    @FXML
+    private ImageView image11;
+    @FXML
+    private ImageView image12;
+    @FXML
+    private ImageView image13;
+    @FXML
+    private ImageView image14;
+    @FXML
+    private ImageView image15;
+    @FXML
+    private ImageView image16;
+    @FXML
+    private ImageView image17;
+    @FXML
+    private ImageView image18;
+    @FXML
+    private ImageView image19;
+    @FXML
+    private ImageView image20;
+    @FXML
+    private ImageView image21;
+    @FXML
+    private ImageView image22;
+    @FXML
+    private ImageView image23;
+    @FXML
+    private ImageView image24;
+
     private List<Door> doors = new ArrayList<>();
-
-    private final InputStream backgroundurl = HelloController.class.getResourceAsStream("images/background.jpg");
-    private final Image backgroundImg = new Image(backgroundurl);
-    private Border border;
-
-    // NormalGreenBackground
-    private BackgroundFill backgroundFill = new BackgroundFill(Color.DARKGREEN, CornerRadii.EMPTY, Insets.EMPTY);
-    private final Background doorBackground = new Background(backgroundFill);
 
     @FXML
     private void initialize() {
-        border = new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT));
-        Heading.setText("Casino Advent Calendar");
-        backgroundImage.setImage(backgroundImg);
+        Heading.setText("Fish Advent Calendar");
         initDoors();
+        setAllImagesNotVisible();
     }
 
     private void initDoors() {
@@ -98,27 +136,42 @@ public class HelloController {
                 final Button doorButton = door;
 
                 doorButton.setText(String.valueOf(i));
-                doorButton.setBorder(border);
-                doorButton.setBackground(doorBackground);
                 doorButton.setOnAction(event -> openDoor(doorButton, doorNumber));
                 doors.add(new Door(i, "Content of door " + i));
 
                 // Set image to corresponding ImageView
-//                findCorrespondingImageToDoor(i);
+                findCorrespondingImageToDoor(i);
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 throw new RuntimeException(e);
             }
         }
     }
 
+    private void setAllImagesNotVisible() {
+        for (int i = 1; i <= 24; i++) {
+            try {
+                ImageView imageView = (ImageView) getClass().getDeclaredField("image" + i).get(this);
+                imageView.setVisible(false);
+            } catch (IllegalAccessException | NoSuchFieldException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
 
     private void findCorrespondingImageToDoor(int doorNumber) {
-        String imageFileName = "images/door" + doorNumber + ".jpg";
-        InputStream imageUrl = HelloController.class.getResourceAsStream(imageFileName);
-        Image doorImage = new Image(imageUrl);
+        String imageFileName = "/at/htl/adventskalenderabercool/images/door" + doorNumber + ".jpg";
+        InputStream imageStream = getClass().getResourceAsStream(imageFileName);
+
+        if (imageStream == null) {
+            System.err.println("Bilddatei nicht gefunden: " + imageFileName);
+            return;
+        }
+
+        Image doorImage = new Image(imageStream);
 
         try {
             ImageView imageView = (ImageView) getClass().getDeclaredField("image" + doorNumber).get(this);
+            System.out.println("ImageView: " + imageView + " -> " + doorNumber);
             imageView.setImage(doorImage);
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
@@ -130,29 +183,33 @@ public class HelloController {
         Door currentDoor = doors.get(doorNumber - 1);
 
         if (!currentDoor.isOpened()) {
-            // Create a scaling animation to simulate the door growing bigger
-            ScaleTransition scaleTransition = new ScaleTransition(Duration.millis(500), door);
-            scaleTransition.setByX(1.2);
-            scaleTransition.setByY(1.2);
-            scaleTransition.setCycleCount(1);
-            scaleTransition.setAutoReverse(false);
-
-            // Create a fade out animation to make the door disappear
-            FadeTransition fadeTransition = new FadeTransition(Duration.millis(500), door);
-            fadeTransition.setFromValue(1.0);
-            fadeTransition.setToValue(0.0);
-            fadeTransition.setCycleCount(1);
-            fadeTransition.setAutoReverse(false);
-
-            SequentialTransition sequentialTransition = new SequentialTransition(scaleTransition, fadeTransition);
-            sequentialTransition.play();
-
             System.out.println("Opened door " + doorNumber + ": " + currentDoor.getContent());
             currentDoor.setOpened(true);
+            openAnimation(door, doorNumber);
         } else {
             System.out.println("Door " + doorNumber + " is already opened.");
         }
     }
 
+    private void setImageAtIndexToVisible(int index) {
+        try {
+            ImageView imageView = (ImageView) getClass().getDeclaredField("image" + index).get(this);
+            imageView.setVisible(true);
+        } catch (IllegalAccessException | NoSuchFieldException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-}
+    private void openAnimation(Button door, int doorNumber) {
+    try {
+        ImageView imageView = (ImageView) getClass().getDeclaredField("image" + doorNumber).get(this);
+        // Create a TranslateTransition for the door
+        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), door);
+        transition.setByX(100); // Move the door 100 pixels to the right
+        transition.setOnFinished(event -> imageView.setVisible(true)); // Show image when animation is finished
+        // Start the animation
+        transition.play();
+    } catch (IllegalAccessException | NoSuchFieldException e) {
+        throw new RuntimeException(e);
+    }
+}}
