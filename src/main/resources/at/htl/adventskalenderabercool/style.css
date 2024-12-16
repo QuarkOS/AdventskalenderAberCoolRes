@@ -18,3 +18,24 @@
     -fx-padding: 10;
     -fx-font-size: 20;
 }
+
+.door:hover {
+    -fx-background-color: #e33636;
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 5;
+    -fx-background-radius: 5;
+    -fx-padding: 10;
+    -fx-font-size: 20;
+    -fx-text-fill: white;
+}
+
+.image-view {
+    -fx-opacity: 0;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.75), 10, 0.5, 0, 0);
+    -fx-translate-y: 0;
+    -fx-translate-x: 0;
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+    -fx-smooth: true;
+}

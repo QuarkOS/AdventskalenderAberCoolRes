@@ -1,15 +1,20 @@
 package at.htl.adventskalenderabercool;
 
-import javafx.animation.TranslateTransition;
+import javafx.animation.*;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.MoveTo;
+import javafx.scene.shape.Path;
+import javafx.scene.shape.QuadCurveTo;
 import javafx.util.Duration;
 
 import java.io.InputStream;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 import java.util.ArrayList;
 
@@ -120,12 +125,14 @@ public class HelloController {
     private ImageView image24;
 
     private List<Door> doors = new ArrayList<>();
+    AudioController audioController = new AudioController();
 
     @FXML
     private void initialize() {
         Heading.setText("Fish Advent Calendar");
         initDoors();
         setAllImagesNotVisible();
+        audioController.play();
     }
 
     private void initDoors() {
@@ -136,6 +143,7 @@ public class HelloController {
                 final Button doorButton = door;
 
                 doorButton.setText(String.valueOf(i));
+                doorButton.getStyleClass().add("door");
                 doorButton.setOnAction(event -> openDoor(doorButton, doorNumber));
                 doors.add(new Door(i, "Content of door " + i));
 
@@ -147,16 +155,19 @@ public class HelloController {
         }
     }
 
+
     private void setAllImagesNotVisible() {
         for (int i = 1; i <= 24; i++) {
             try {
                 ImageView imageView = (ImageView) getClass().getDeclaredField("image" + i).get(this);
                 imageView.setVisible(false);
+                imageView.getStyleClass().add("image-view");
             } catch (IllegalAccessException | NoSuchFieldException e) {
                 throw new RuntimeException(e);
             }
         }
     }
+
 
     private void findCorrespondingImageToDoor(int doorNumber) {
         String imageFileName = "/at/htl/adventskalenderabercool/images/door" + doorNumber + ".jpg";
@@ -178,38 +189,72 @@ public class HelloController {
         }
     }
 
+    public boolean isDateAlreadyPassed(Door door) {
+        LocalDate currentDate = LocalDate.now();
+        LocalDate doorDate = LocalDate.of(currentDate.getYear(), Month.DECEMBER, door.getNumber());
+        return currentDate.isBefore(doorDate);
+    }
+
 
     private void openDoor(Button door, int doorNumber) {
         Door currentDoor = doors.get(doorNumber - 1);
 
-        if (!currentDoor.isOpened()) {
-            System.out.println("Opened door " + doorNumber + ": " + currentDoor.getContent());
-            currentDoor.setOpened(true);
-            openAnimation(door, doorNumber);
+        if (!isDateAlreadyPassed(currentDoor)) {
+            if (!currentDoor.isOpened()) {
+                System.out.println("Opened door " + doorNumber + ": " + currentDoor.getContent());
+                currentDoor.setOpened(true);
+                openAnimation(door, doorNumber);
+            } else {
+                System.out.println("Door " + doorNumber + " is already opened.");
+            }
         } else {
-            System.out.println("Door " + doorNumber + " is already opened.");
+            System.out.println("Cannot open door " + doorNumber + " yet. The date has not passed.");
         }
     }
 
-    private void setImageAtIndexToVisible(int index) {
+
+    private void openAnimation(Button door, int doorNumber) {
         try {
-            ImageView imageView = (ImageView) getClass().getDeclaredField("image" + index).get(this);
-            imageView.setVisible(true);
+            ImageView imageView = (ImageView) getClass().getDeclaredField("image" + doorNumber).get(this);
+            imageView.setVisible(false);
+
+            int direction = (Math.random() < 0.5) ? 1 : -1;
+
+            Path path = new Path();
+            path.getElements().add(new MoveTo(door.getTranslateX() + 50, door.getTranslateY() + 50));
+            path.getElements().add(new QuadCurveTo(
+                    door.getTranslateX() + 100 * direction,
+                    door.getTranslateY() - 200,
+                    door.getTranslateX() + 200 * direction,
+                    door.getTranslateY()));
+
+            PathTransition pathTransition = new PathTransition(Duration.seconds(1.5), path, door);
+
+            RotateTransition rotateTransition = new RotateTransition(Duration.seconds(1.5), door);
+            rotateTransition.setByAngle(720);
+
+            FadeTransition fadeOutTransition = new FadeTransition(Duration.seconds(1.5), door);
+            fadeOutTransition.setFromValue(1.0);
+            fadeOutTransition.setToValue(0.0);
+
+            FadeTransition fadeInTransition = new FadeTransition(Duration.seconds(1.5), imageView);
+            fadeInTransition.setFromValue(0.0);
+            fadeInTransition.setToValue(1.0);
+            fadeInTransition.setOnFinished(event -> imageView.setVisible(true));
+
+            SequentialTransition sequentialTransition = new SequentialTransition(
+                    new ParallelTransition(pathTransition, rotateTransition, fadeOutTransition),
+                    fadeInTransition
+            );
+
+            door.setOnMouseClicked(event -> {
+                imageView.setVisible(true);
+                sequentialTransition.play();
+            });
+
         } catch (IllegalAccessException | NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private void openAnimation(Button door, int doorNumber) {
-    try {
-        ImageView imageView = (ImageView) getClass().getDeclaredField("image" + doorNumber).get(this);
-        // Create a TranslateTransition for the door
-        TranslateTransition transition = new TranslateTransition(Duration.seconds(1), door);
-        transition.setByX(100); // Move the door 100 pixels to the right
-        transition.setOnFinished(event -> imageView.setVisible(true)); // Show image when animation is finished
-        // Start the animation
-        transition.play();
-    } catch (IllegalAccessException | NoSuchFieldException e) {
-        throw new RuntimeException(e);
-    }
-}}
+}
