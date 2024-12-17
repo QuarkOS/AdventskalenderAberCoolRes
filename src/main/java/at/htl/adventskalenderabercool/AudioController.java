@@ -39,7 +39,6 @@ public class AudioController {
     public void play(){
         new Thread(() -> {
             while (true) {
-                System.out.println("Current song: " + songs.get(currentSong.get()).getFile());
                 if (!isPlaying.get()) {
                     isPlaying.set(true);
                     // Stopping the last MediaPlayer, otherwise songs won't switch

@@ -7,11 +7,15 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 import javafx.scene.shape.MoveTo;
 import javafx.scene.shape.Path;
 import javafx.scene.shape.QuadCurveTo;
 import javafx.util.Duration;
 
+import java.io.File;
 import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.Month;
@@ -70,8 +74,7 @@ public class HelloController {
     private Button Door9;
     @FXML
     private Label Heading;
-    @FXML
-    private ImageView backgroundImage;
+
     @FXML
     private Pane backgroundPane;
 
@@ -123,12 +126,21 @@ public class HelloController {
     private ImageView image23;
     @FXML
     private ImageView image24;
+    @FXML
+    private MediaView backgroundImage;
 
     private List<Door> doors = new ArrayList<>();
     AudioController audioController = new AudioController();
 
     @FXML
     private void initialize() {
+        File videoFile = new File("src/main/resources/at/htl/adventskalenderabercool/background.mp4");
+        Media media = new Media(videoFile.toURI().toString());
+        MediaPlayer mediaPlayer = new MediaPlayer(media);
+        backgroundImage.setMediaPlayer(mediaPlayer);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.play();
+
         Heading.setText("Fish Advent Calendar");
         initDoors();
         setAllImagesNotVisible();

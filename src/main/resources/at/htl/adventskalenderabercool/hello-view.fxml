@@ -7,9 +7,10 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
 
+<?import javafx.scene.media.MediaView?>
 <Pane fx:id="backgroundPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="1080.0" prefWidth="1920.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="at.htl.adventskalenderabercool.HelloController">
    <children>
-      <ImageView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true" />
+      <MediaView fx:id="backgroundImage" fitHeight="1080.0" fitWidth="1920.0" pickOnBounds="true" preserveRatio="true" />
       <Group layoutX="610.0" layoutY="151.0">
          <children>
             <Button fx:id="Door24" layoutX="300.0" mnemonicParsing="false" prefHeight="100.0" prefWidth="100.0" text="Button" />
